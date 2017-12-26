@@ -1,37 +1,21 @@
 package com.ramannada.springdemo.dao.impl;
+
 import com.ramannada.springdemo.dao.MahasiswaDAO;
 import com.ramannada.springdemo.entity.Mahasiswa;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.InvalidResultSetAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.sql.DataSource;
-import java.io.UnsupportedEncodingException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @PropertySource({"classpath:config.properties"})
 @Repository
-public class MahasiswaDAOImpl implements MahasiswaDAO {
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-    @Autowired
-    DataSource dataSource;
-
+public class MahasiswaDAOImpl extends BaseDAOImpl implements MahasiswaDAO {
     @Value("${table.mahasiswa}")
     private String table;
 
@@ -148,9 +132,7 @@ public class MahasiswaDAOImpl implements MahasiswaDAO {
 
     @Override
     public void delete(Long id) {
-        String sql = "DELETE FROM " + table + " WHERE id = ?";
-
-        jdbcTemplate.update(sql, Long.valueOf(id));
+        super.delete(id);
     }
 }
 //    KeyHolder keyHolder = new GeneratedKeyHolder();

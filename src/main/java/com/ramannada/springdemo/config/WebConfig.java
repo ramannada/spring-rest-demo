@@ -8,20 +8,20 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.annotation.TransactionManagementConfigurer;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
 import javax.sql.DataSource;
 
 
 @Configuration
 @PropertySource({"classpath:config.properties"})
 @EnableWebMvc
-@EnableTransactionManagement
 @ComponentScan(basePackages = "com.ramannada.springdemo")
-
-public class WebConfig implements TransactionManagementConfigurer {
+public class WebConfig extends WebMvcConfigurerAdapter {
     //    setting jdbc
     @Value("${jdbc.driver}")
     private String jdbcDriver;
@@ -50,6 +50,7 @@ public class WebConfig implements TransactionManagementConfigurer {
     @Value("${hibernate.c3p0.max_statements}")
     private int c3p0MaxStatement;
 
+//    db setting
     @Bean
     public DataSource dataSource() {
         BasicDataSource dataSource = new BasicDataSource();
@@ -65,6 +66,7 @@ public class WebConfig implements TransactionManagementConfigurer {
         return dataSource;
     }
 
+//    init jdbc template for connection to db
     @Bean
     public JdbcTemplate jdbcTemplate() {
         return new JdbcTemplate(dataSource());
@@ -75,6 +77,7 @@ public class WebConfig implements TransactionManagementConfigurer {
         return new PropertySourcesPlaceholderConfigurer();
     }
 
+//    transaction
     @Bean
     public DataSourceTransactionManager transactionManager() {
         DataSourceTransactionManager transactionManager = new DataSourceTransactionManager();
@@ -82,9 +85,12 @@ public class WebConfig implements TransactionManagementConfigurer {
         return transactionManager;
     }
 
-
-    @Override
-    public PlatformTransactionManager annotationDrivenTransactionManager() {
-        return transactionManager();
+//    support fileupload
+    @Bean
+    public MultipartResolver multipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        multipartResolver.setMaxUploadSize(1000000);
+        return multipartResolver;
     }
+
 }
