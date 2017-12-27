@@ -9,11 +9,4 @@ public abstract class BaseDAOImpl {
     protected JdbcTemplate jdbcTemplate;
     @Autowired
     protected DataSource dataSource;
-    private String table;
-
-    public void delete(Long id) {
-        String sql = "DELETE FROM " + table + " WHERE id = ?";
-
-        jdbcTemplate.update(sql, Long.valueOf(id));
-    }
 }

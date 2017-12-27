@@ -155,7 +155,9 @@ public class MahasiswaDAOImpl extends BaseDAOImpl implements MahasiswaDAO {
 
     @Override
     public void delete(Long id) {
-        super.delete(id);
+        String sql = "DELETE FROM " + table + " WHERE id = ?";
+
+        jdbcTemplate.update(sql, Long.valueOf(id));
     }
 
 

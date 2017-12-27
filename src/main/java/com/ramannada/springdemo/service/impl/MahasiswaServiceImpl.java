@@ -12,12 +12,10 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Service("mahasiswaService")
-@Transactional(readOnly = true)
 public class MahasiswaServiceImpl implements MahasiswaService {
     @Autowired
     private MahasiswaDAO mahasiswaDao;
 
-    @Transactional
     @Override
     public Mahasiswa save(Mahasiswa mahasiswa) {
         Mahasiswa response = null;

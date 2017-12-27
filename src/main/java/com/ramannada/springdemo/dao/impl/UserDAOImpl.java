@@ -109,6 +109,8 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 
     @Override
     public void delete(Long id) {
-        super.delete(id);
+        String sql = "DELETE FROM " + table + " WHERE id = ?";
+
+        jdbcTemplate.update(sql, Long.valueOf(id));
     }
 }
