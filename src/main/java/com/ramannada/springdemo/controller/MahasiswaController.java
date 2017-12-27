@@ -51,6 +51,17 @@ public class MahasiswaController extends BaseController {
         return ResponseEntity.ok().body(mahasiswa);
     }
 
+    @GetMapping("/mahasiswa/page/{page}")
+    public ResponseEntity<?> getAllWithPage(@PathVariable("page") int page) {
+        int entityPerPage = 5;
+        List<Mahasiswa> mahasiswa = mahasiswaService.getAllWithPage(page, entityPerPage);
+
+        if (mahasiswa.size() <= 1) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok().body(mahasiswa);
+    }
+
     @GetMapping("/mahasiswa/find")
     public ResponseEntity<?> find(@RequestParam("nama") String nama) {
         Mahasiswa mahasiswa = new Mahasiswa();

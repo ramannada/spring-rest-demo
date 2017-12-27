@@ -41,6 +41,12 @@ public class MahasiswaServiceImpl implements MahasiswaService {
         return mahasiswaDao.getAll();
     }
 
+    @Transactional
+    @Override
+    public List<Mahasiswa> getAllWithPage(int page, int entityPerPage) {
+        return mahasiswaDao.getAllWithPage(page, entityPerPage);
+    }
+
     @Override
     public Boolean isExist(Long id) {
         Mahasiswa mahasiswa = mahasiswaDao.get(id);

@@ -47,7 +47,7 @@ public class MahasiswaDAOImpl extends BaseDAOImpl implements MahasiswaDAO {
     @Override
     public Mahasiswa get(Long id) {
         String sql = "SELECT * FROM " + table + " WHERE id = ?";
-        Mahasiswa mahasiswa;
+        Mahasiswa mahasiswa = null;
        try {
            mahasiswa = jdbcTemplate.queryForObject(sql, new Object[] {id},new RowMapper<Mahasiswa>() {
 
@@ -61,6 +61,10 @@ public class MahasiswaDAOImpl extends BaseDAOImpl implements MahasiswaDAO {
                }}
            );
        } catch (DataAccessException e) {
+           e.printStackTrace();
+       }
+
+       if (mahasiswa == null) {
            return null;
        }
 
@@ -88,6 +92,25 @@ public class MahasiswaDAOImpl extends BaseDAOImpl implements MahasiswaDAO {
             return mahasiswaList;
         }
 
+
+        return mahasiswaList;
+    }
+
+    @Override
+    public List<Mahasiswa> getAllWithPage(int page, int entityPerPage) {
+        List<Mahasiswa> mahasiswaList;
+        if (page == 1) {
+            page = 0;
+        } else {
+            page = (entityPerPage - 1) * (page - 1);
+        }
+        String sql = "SELECT * FROM " + table + " limit ?, ?";
+
+        mahasiswaList = jdbcTemplate.query(sql, new Object[]{page, entityPerPage}, new MahasiswaRowMap());
+
+        if (mahasiswaList == null) {
+            return null;
+        }
 
         return mahasiswaList;
     }
@@ -133,6 +156,20 @@ public class MahasiswaDAOImpl extends BaseDAOImpl implements MahasiswaDAO {
     @Override
     public void delete(Long id) {
         super.delete(id);
+    }
+
+
+    protected class MahasiswaRowMap implements RowMapper<Mahasiswa> {
+
+        @Override
+        public Mahasiswa mapRow(ResultSet resultSet, int i) throws SQLException {
+            Mahasiswa result = new Mahasiswa();
+            result.setId(resultSet.getLong("id"));
+            result.setNim(resultSet.getString("nim"));
+            result.setNama(resultSet.getString("name"));
+
+            return result;
+        }
     }
 }
 //    KeyHolder keyHolder = new GeneratedKeyHolder();
