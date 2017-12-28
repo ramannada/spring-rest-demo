@@ -33,23 +33,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Value("${jdbc.password}")
     private String jdbcPassword;
 
-//    setting hibernate
-    @Value("${hibernate.show_sql}")
-    private boolean hibernateSql;
-    @Value("${hibernate.hbm2ddl.auto}")
-    private String hibernateHbm2Ddl;
-
-//    C390 properties
-    @Value("${hibernate.c3p0.min_size}")
-    private int c3p0MinSize;
-    @Value("${hibernate.c3p0.max_size}")
-    private int c3p0MaxSize;
-    @Value("${hibernate.c3p0.acquire_increment}")
-    private int c3p0AcquireIncrement;
-    @Value("${hibernate.c3p0.timeout}")
-    private int c3p0TimeOut;
-    @Value("${hibernate.c3p0.max_statements}")
-    private int c3p0MaxStatement;
 
 //    db setting
     @Bean

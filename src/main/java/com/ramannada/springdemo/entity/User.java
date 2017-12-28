@@ -9,7 +9,6 @@ public class User extends BaseEntity implements UserDetails {
     private Long id;
     private String username;
     private String password;
-    private String role;
     private Boolean enabled;
 
     @Override
@@ -47,6 +46,7 @@ public class User extends BaseEntity implements UserDetails {
         return enabled;
     }
 
+
     @Override
     public Long getId() {
         return id;
@@ -67,13 +67,5 @@ public class User extends BaseEntity implements UserDetails {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 }

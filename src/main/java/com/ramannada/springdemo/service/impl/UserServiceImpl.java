@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service("userService")
 @Transactional
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
     @Autowired
     UserDAO userDAO;
 
@@ -61,9 +61,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+// TODO: 12/28/2017 findByUsername
         User user = new User();
         user.setUsername(s);
+        user.setPassword("qwerty");
+        user.setEnabled(true);
 
-        return (UserDetails) find(user);
+        if (user == null) {
+            throw  new UsernameNotFoundException("User not found");
+        }
+
+        return user;
     }
 }
