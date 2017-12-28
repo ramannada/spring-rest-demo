@@ -20,6 +20,7 @@ import javax.sql.DataSource;
 @Configuration
 @PropertySource({"classpath:config.properties"})
 @EnableWebMvc
+@EnableTransactionManagement
 @ComponentScan(basePackages = "com.ramannada.springdemo")
 public class WebConfig extends WebMvcConfigurerAdapter {
     //    setting jdbc
