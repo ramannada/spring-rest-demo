@@ -4,7 +4,6 @@ import com.ramannada.springdemo.dao.MahasiswaDAO;
 import com.ramannada.springdemo.entity.Mahasiswa;
 import com.ramannada.springdemo.service.MahasiswaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +11,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class MahasiswaServiceImpl implements MahasiswaService {
     @Autowired
     private MahasiswaDAO mahasiswaDao;
@@ -29,7 +28,7 @@ public class MahasiswaServiceImpl implements MahasiswaService {
         return response;
     }
 
-    @Transactional
+
     @Override
     public Mahasiswa get(Long id) {
         return mahasiswaDao.get(id);
@@ -39,6 +38,12 @@ public class MahasiswaServiceImpl implements MahasiswaService {
     @Override
     public List<Mahasiswa> getAll() {
         return mahasiswaDao.getAll();
+    }
+
+
+    @Override
+    public List<Mahasiswa> getAllWithPage(int page, int entityPerPage) {
+        return mahasiswaDao.getAllWithPage(page, entityPerPage);
     }
 
     @Override

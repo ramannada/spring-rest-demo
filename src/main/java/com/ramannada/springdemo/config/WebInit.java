@@ -1,5 +1,6 @@
 package com.ramannada.springdemo.config;
 
+//import com.ramannada.springdemo.security.WebSecurityConfig;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class WebInit extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -15,9 +16,6 @@ public class WebInit extends AbstractAnnotationConfigDispatcherServletInitialize
 
     @Override
     protected String[] getServletMappings() {
-        String[] mahasiswaMap =
-                {"/", "/mahasiswa", "/mahasiswa/{id}", "/mahasiswa/update", "/mahasiswa/find"};
-
-        return mahasiswaMap;
+        return new String[] {"/"};
     }
 }

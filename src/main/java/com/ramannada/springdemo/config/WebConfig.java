@@ -8,10 +8,12 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.annotation.TransactionManagementConfigurer;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
 import javax.sql.DataSource;
 
 
@@ -20,8 +22,7 @@ import javax.sql.DataSource;
 @EnableWebMvc
 @EnableTransactionManagement
 @ComponentScan(basePackages = "com.ramannada.springdemo")
-
-public class WebConfig implements TransactionManagementConfigurer {
+public class WebConfig extends WebMvcConfigurerAdapter {
     //    setting jdbc
     @Value("${jdbc.driver}")
     private String jdbcDriver;
@@ -32,24 +33,8 @@ public class WebConfig implements TransactionManagementConfigurer {
     @Value("${jdbc.password}")
     private String jdbcPassword;
 
-//    setting hibernate
-    @Value("${hibernate.show_sql}")
-    private boolean hibernateSql;
-    @Value("${hibernate.hbm2ddl.auto}")
-    private String hibernateHbm2Ddl;
 
-//    C390 properties
-    @Value("${hibernate.c3p0.min_size}")
-    private int c3p0MinSize;
-    @Value("${hibernate.c3p0.max_size}")
-    private int c3p0MaxSize;
-    @Value("${hibernate.c3p0.acquire_increment}")
-    private int c3p0AcquireIncrement;
-    @Value("${hibernate.c3p0.timeout}")
-    private int c3p0TimeOut;
-    @Value("${hibernate.c3p0.max_statements}")
-    private int c3p0MaxStatement;
-
+//    db setting
     @Bean
     public DataSource dataSource() {
         BasicDataSource dataSource = new BasicDataSource();
@@ -65,6 +50,7 @@ public class WebConfig implements TransactionManagementConfigurer {
         return dataSource;
     }
 
+//    init jdbc template for connection to db
     @Bean
     public JdbcTemplate jdbcTemplate() {
         return new JdbcTemplate(dataSource());
@@ -75,6 +61,7 @@ public class WebConfig implements TransactionManagementConfigurer {
         return new PropertySourcesPlaceholderConfigurer();
     }
 
+//    transaction
     @Bean
     public DataSourceTransactionManager transactionManager() {
         DataSourceTransactionManager transactionManager = new DataSourceTransactionManager();
@@ -82,9 +69,12 @@ public class WebConfig implements TransactionManagementConfigurer {
         return transactionManager;
     }
 
-
-    @Override
-    public PlatformTransactionManager annotationDrivenTransactionManager() {
-        return transactionManager();
+//    support fileupload
+    @Bean
+    public MultipartResolver multipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        multipartResolver.setMaxUploadSize(1000000);
+        return multipartResolver;
     }
+
 }

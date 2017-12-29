@@ -1,7 +1,5 @@
 package com.ramannada.springdemo.dao;
 
-import org.springframework.dao.DataAccessException;
-
 import java.sql.SQLException;
 import java.util.List;
 
