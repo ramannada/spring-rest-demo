@@ -7,7 +7,6 @@ import com.ramannada.springdemo.security.TokenUtils;
 import com.ramannada.springdemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mobile.device.Device;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -45,7 +44,7 @@ public class AuthController extends Serializers.Base {
         final UserDetails user = userService.loadUserByUsername(auth.getUsername());
         final String token = tokenUtils.generateToken((User) user);
 
-        return ResponseEntity.ok().body(token);
+        return ResponseEntity.ok().body(user);
     }
 
     @GetMapping("/auth")

@@ -1,6 +1,5 @@
 package com.ramannada.springdemo.security;
 
-import com.ramannada.springdemo.entity.User;
 import com.ramannada.springdemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

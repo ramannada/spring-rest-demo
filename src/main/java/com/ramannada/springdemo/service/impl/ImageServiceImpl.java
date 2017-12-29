@@ -21,7 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-@Service("imageService")
+@Service
 @Transactional
 public class ImageServiceImpl implements ImageService {
     @Autowired
@@ -31,6 +31,7 @@ public class ImageServiceImpl implements ImageService {
     @Value("${file.upload.directory}")
     private String storage;
 
+    @Transactional
     public List<Image> save(MultipartHttpServletRequest request) throws SQLException {
         Iterator<String> itr = request.getFileNames();
         MultipartFile mpf;
@@ -80,6 +81,11 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public InputStream getFile(Long id) {
         Image image = imageDAO.get(id);
+
+        if (image == null) {
+            return null;
+        }
+        
         File imageFile = new File(image.getUrl());
 
         try {
@@ -90,6 +96,7 @@ public class ImageServiceImpl implements ImageService {
         return null;
     }
 
+    @Transactional
     @Override
     public Image save(Image entity) throws SQLException {
         return imageDAO.save(entity);
@@ -115,11 +122,13 @@ public class ImageServiceImpl implements ImageService {
         return null;
     }
 
+    @Transactional
     @Override
     public Image update(Image entity) {
         return null;
     }
 
+    @Transactional
     @Override
     public void delete(Long id) {
         Image image = imageDAO.get(id);

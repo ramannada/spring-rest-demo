@@ -3,7 +3,6 @@ package com.ramannada.springdemo.dao.impl;
 import com.ramannada.springdemo.dao.MahasiswaDAO;
 import com.ramannada.springdemo.entity.Mahasiswa;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,7 +12,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@PropertySource({"classpath:config.properties"})
+
 @Repository
 public class MahasiswaDAOImpl extends BaseDAOImpl implements MahasiswaDAO {
     @Value("${table.mahasiswa}")

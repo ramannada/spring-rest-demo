@@ -5,14 +5,13 @@ import com.ramannada.springdemo.entity.User;
 import com.ramannada.springdemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLException;
 import java.util.List;
 
-@Service("userService")
+@Service
 @Transactional
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -61,11 +60,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-// TODO: 12/28/2017 findByUsername
+
         User user = new User();
-        user.setUsername(s);
-        user.setPassword("qwerty");
-        user.setEnabled(true);
+
+        user = userDAO.findByUsername(s);
 
         if (user == null) {
             throw  new UsernameNotFoundException("User not found");

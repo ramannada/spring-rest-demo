@@ -1,8 +1,6 @@
 package com.ramannada.springdemo.service;
 
 import com.ramannada.springdemo.entity.Entity;
-import com.ramannada.springdemo.entity.Mahasiswa;
-
 import java.sql.SQLException;
 import java.util.List;
 
