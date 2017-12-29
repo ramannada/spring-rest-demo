@@ -44,7 +44,7 @@ public class AuthController extends Serializers.Base {
         final UserDetails user = userService.loadUserByUsername(auth.getUsername());
         final String token = tokenUtils.generateToken((User) user);
 
-        return ResponseEntity.ok().body(user);
+        return ResponseEntity.ok().body(token);
     }
 
     @GetMapping("/auth")
