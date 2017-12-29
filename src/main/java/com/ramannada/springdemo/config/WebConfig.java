@@ -8,6 +8,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.sql.DataSource;
+import java.util.Properties;
 
 
 @Configuration
@@ -32,6 +35,16 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     private String jdbcUsername;
     @Value("${jdbc.password}")
     private String jdbcPassword;
+
+//    mail setting
+    @Value("${mail.host}")
+    private String host;
+    @Value("${mail.port}")
+    private String port;
+    @Value("${mail.username}")
+    private String username;
+    @Value("${mail.password}")
+    private String password;
 
 
 //    db setting
@@ -75,6 +88,28 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
         multipartResolver.setMaxUploadSize(1000000);
         return multipartResolver;
+    }
+
+//    mailer
+    @Bean
+    public JavaMailSender javaMailSender() {
+      JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+      mailSender.setHost(host);
+      mailSender.setPort(Integer.parseInt(port));
+      mailSender.setUsername(username);
+      mailSender.setPassword(password);
+
+      mailSender.setJavaMailProperties(mailProperties());
+
+      return mailSender;
+    }
+
+    private Properties mailProperties() {
+        Properties properties = new Properties();
+        properties.setProperty("mail.smtp.auth", "true");
+        properties.setProperty("mail.smtp.starttls.enable", "true");
+        properties.setProperty("mail.debug", "false");
+        return properties;
     }
 
 }
