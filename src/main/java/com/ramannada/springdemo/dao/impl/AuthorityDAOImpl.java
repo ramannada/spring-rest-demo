@@ -2,17 +2,25 @@ package com.ramannada.springdemo.dao.impl;
 
 import com.ramannada.springdemo.dao.AuthorityDAO;
 import com.ramannada.springdemo.entity.Authority;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
 
 @Repository
-public class AuthorityDAOImpl extends BaseDAOImpl implements AuthorityDAO {
+public class AuthorityDAOImpl implements AuthorityDAO {
+    @Autowired
+    protected JdbcTemplate jdbcTemplate;
+    @Autowired
+    protected DataSource dataSource;
+
     @Value("${table.authority}")
     private String table;
 

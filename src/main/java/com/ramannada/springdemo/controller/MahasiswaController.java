@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.awt.print.Pageable;
 import java.net.URI;
 import java.sql.SQLException;
 import java.util.*;
@@ -22,12 +23,13 @@ public class MahasiswaController extends BaseController {
     public ResponseEntity<?> create(@RequestBody Mahasiswa mahasiswa, BindingResult result) throws SQLException {
         Mahasiswa response = mahasiswaService.save(mahasiswa);
 
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setLocation(UriComponentsBuilder.fromPath("user/{id}").buildAndExpand(response.getId()).toUri());
+        if (response != null) {
+            URI uri = UriComponentsBuilder.fromPath("user/{id}").buildAndExpand(response.getId()).toUri();
 
-        URI uri = UriComponentsBuilder.fromPath("user/{id}").buildAndExpand(response.getId()).toUri();
+            return ResponseEntity.created(uri).body(response);
+        }
 
-        return ResponseEntity.created(uri).body(response);
+        return ResponseEntity.unprocessableEntity().build();
     }
 
 
@@ -63,15 +65,28 @@ public class MahasiswaController extends BaseController {
     }
 
     @GetMapping("/mahasiswa/find")
-    public ResponseEntity<?> find(@RequestParam("nama") String nama) {
+    public ResponseEntity<?> find(@RequestParam(value = "nim", required = false) String nim,
+                                  @RequestParam(value = "nama", required = false) String nama) {
         Mahasiswa mahasiswa = new Mahasiswa();
-        mahasiswa.setNama(nama);
+        if (nim != null) {
+            mahasiswa.setNim(nim);
+        }
+
+        if (nama != null) {
+            mahasiswa.setNama(nama);
+        }
+
+        if (nim == null && nama == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+
 
         List<Mahasiswa> response = mahasiswaService.find(mahasiswa);
 
-        if (response.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
+       if (response.size() == 0) {
+           return ResponseEntity.notFound().build();
+       }
         return ResponseEntity.ok().body(response);
     }
 
@@ -92,9 +107,14 @@ public class MahasiswaController extends BaseController {
 
     @DeleteMapping("mahasiswa/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        mahasiswaService.delete(id);
 
         if (!mahasiswaService.isExist(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        mahasiswaService.delete(id);
+
+        if (mahasiswaService.isExist(id)) {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
 

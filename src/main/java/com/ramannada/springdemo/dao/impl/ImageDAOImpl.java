@@ -2,18 +2,26 @@ package com.ramannada.springdemo.dao.impl;
 
 import com.ramannada.springdemo.dao.ImageDAO;
 import com.ramannada.springdemo.entity.Image;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
 
 @Repository
-public class ImageDAOImpl extends BaseDAOImpl implements ImageDAO {
+public class ImageDAOImpl implements ImageDAO {
+    @Autowired
+    protected JdbcTemplate jdbcTemplate;
+    @Autowired
+    protected DataSource dataSource;
+
     @Value("${table.image}")
     private String table;
 

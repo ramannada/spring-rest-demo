@@ -24,8 +24,14 @@ public class MahasiswaServiceImpl implements MahasiswaService {
             response = mahasiswaDao.save(mahasiswa);
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
-        return response;
+
+        if (isExist(response.getId())) {
+            return response;
+        }
+
+        return null;
     }
 
 
@@ -52,9 +58,9 @@ public class MahasiswaServiceImpl implements MahasiswaService {
 
         if (mahasiswa != null) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     @Override

@@ -3,13 +3,19 @@ package com.ramannada.springdemo.dao.impl;
 import com.ramannada.springdemo.dao.UserDAO;
 import com.ramannada.springdemo.entity.Authority;
 import com.ramannada.springdemo.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
+public class UserDAOImpl implements UserDAO {
+    @Autowired
+    protected JdbcTemplate jdbcTemplate;
+    @Autowired
+    protected DataSource dataSource;
+
     @Value("${table.user}")
     private String table;
 
@@ -155,5 +166,10 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
         }
 
         return response;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        return null;
     }
 }

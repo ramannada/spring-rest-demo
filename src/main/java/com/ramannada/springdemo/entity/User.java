@@ -13,7 +13,7 @@ public class User extends BaseEntity implements UserDetails {
     private Boolean enabled;
     private List<Authority> authorities;
 
-    @Override
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }

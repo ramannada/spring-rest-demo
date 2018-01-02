@@ -2,19 +2,28 @@ package com.ramannada.springdemo.dao.impl;
 
 import com.ramannada.springdemo.dao.MahasiswaDAO;
 import com.ramannada.springdemo.entity.Mahasiswa;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Repository
-public class MahasiswaDAOImpl extends BaseDAOImpl implements MahasiswaDAO {
+public class MahasiswaDAOImpl implements MahasiswaDAO {
+    @Autowired
+    protected JdbcTemplate jdbcTemplate;
+    @Autowired
+    protected DataSource dataSource;
+
     @Value("${table.mahasiswa}")
     private String table;
 
@@ -61,13 +70,14 @@ public class MahasiswaDAOImpl extends BaseDAOImpl implements MahasiswaDAO {
            );
        } catch (DataAccessException e) {
            e.printStackTrace();
-       }
-
-       if (mahasiswa == null) {
            return null;
        }
 
-    	return mahasiswa;
+       if (mahasiswa != null) {
+           return mahasiswa;
+       }
+
+    	return null;
     }
 
     @Override
@@ -118,23 +128,29 @@ public class MahasiswaDAOImpl extends BaseDAOImpl implements MahasiswaDAO {
     public List<Mahasiswa> find(Mahasiswa mahasiswa) {
         List<Mahasiswa> mahasiswaList;
         String name = null;
+        String nim = null;
         
-        String sql = "SELECT * FROM " + table + " WHERE name LIKE ?";
+        String sql = "SELECT * FROM " + table + " WHERE 1 = 1";
+
+        if (mahasiswa.getNim() != null) {
+            sql += " AND nim LIKE ?";
+            nim = "%" + mahasiswa.getNim() + "%";
+        }
 
         if (mahasiswa.getNama() != null) {
+            sql += " AND name LIKE ?";
             name = "%" + mahasiswa.getNama() + "%";
         }
 
-        mahasiswaList = jdbcTemplate.query(sql, new Object[] {name}, new RowMapper<Mahasiswa>() {
-                                            @Override
-                                            public Mahasiswa mapRow(ResultSet resultSet, int i) throws SQLException {
-                                                Mahasiswa result = new Mahasiswa();
-                                                result.setId(resultSet.getLong("id"));
-                                                result.setNim(resultSet.getString("nim"));
-                                                result.setNama(resultSet.getString("name"));
-                                                return result;
-                                            }
-                                        });
+        if (mahasiswa.getNim() != null && mahasiswa.getNama() != null) {
+            mahasiswaList = jdbcTemplate.query(sql, new Object[] {nim, name}, new MahasiswaRowMap());
+        }  else if (mahasiswa.getNim() != null) {
+            mahasiswaList = jdbcTemplate.query(sql, new Object[] {nim}, new MahasiswaRowMap());
+        } else if (mahasiswa.getNama() != null) {
+            mahasiswaList = jdbcTemplate.query(sql, new Object[] {name}, new MahasiswaRowMap());
+        } else {
+            mahasiswaList = null;
+        }
 
 
         return mahasiswaList;
