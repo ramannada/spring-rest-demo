@@ -3,6 +3,7 @@ package com.ramannada.springdemo.controller;
 import com.ramannada.springdemo.entity.Mahasiswa;
 import com.ramannada.springdemo.service.MahasiswaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -55,13 +56,22 @@ public class MahasiswaController extends BaseController {
 
     @GetMapping("/mahasiswa/page/{page}")
     public ResponseEntity<?> getAllWithPage(@PathVariable("page") int page) {
-        int entityPerPage = 5;
-        List<Mahasiswa> mahasiswa = mahasiswaService.getAllWithPage(page, entityPerPage);
+        PagedListHolder<Mahasiswa> mahasiswaPaged = new PagedListHolder<>();
+        List<Mahasiswa> mahasiswa = mahasiswaService.getAll();
+        mahasiswaPaged.setSource(mahasiswa);
+        mahasiswaPaged.setPageSize(5);
+        mahasiswaPaged.setPage(page - 1);
 
-        if (mahasiswa.size() <= 1) {
-            return ResponseEntity.noContent().build();
+        if ((page - 1) > mahasiswaPaged.getLastLinkedPage()) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().body(mahasiswa);
+
+        if (page - 1 < 0) {
+            return ResponseEntity.badRequest().build();
+        }
+
+
+        return ResponseEntity.ok().body(mahasiswaPaged.getPageList());
     }
 
     @GetMapping("/mahasiswa/find")
