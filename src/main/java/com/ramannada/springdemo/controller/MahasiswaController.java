@@ -1,16 +1,16 @@
 package com.ramannada.springdemo.controller;
 
+import com.ramannada.springdemo.utils.exception.ResourceNotFoundException;
 import com.ramannada.springdemo.entity.Mahasiswa;
 import com.ramannada.springdemo.service.MahasiswaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.awt.print.Pageable;
+import javax.validation.Valid;
 import java.net.URI;
 import java.sql.SQLException;
 import java.util.*;
@@ -21,7 +21,7 @@ public class MahasiswaController extends BaseController {
     MahasiswaService mahasiswaService;
 
     @PostMapping("/mahasiswa")
-    public ResponseEntity<?> create(@RequestBody Mahasiswa mahasiswa, BindingResult result) throws SQLException {
+    public ResponseEntity<?> create(@Valid @RequestBody Mahasiswa mahasiswa) throws SQLException {
         Mahasiswa response = mahasiswaService.save(mahasiswa);
 
         if (response != null) {
@@ -29,6 +29,7 @@ public class MahasiswaController extends BaseController {
 
             return ResponseEntity.created(uri).body(response);
         }
+
 
         return ResponseEntity.unprocessableEntity().build();
     }
@@ -39,7 +40,7 @@ public class MahasiswaController extends BaseController {
         Mahasiswa response = mahasiswaService.get(id);
 
         if (response == null) {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("Mahasiswa with id " + id + " not found");
         }
         return ResponseEntity.ok().body(response);
     }
@@ -76,7 +77,7 @@ public class MahasiswaController extends BaseController {
 
     @GetMapping("/mahasiswa/find")
     public ResponseEntity<?> find(@RequestParam(value = "nim", required = false) String nim,
-                                  @RequestParam(value = "nama", required = false) String nama) {
+                                  @RequestParam(value = "nama", required = false) String nama){
         Mahasiswa mahasiswa = new Mahasiswa();
         if (nim != null) {
             mahasiswa.setNim(nim);
