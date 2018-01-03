@@ -31,6 +31,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         errorDetail.setDevMessage(exception.getClass().getName());
         errorDetail.setDetail(exception.getMessage());
 
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDetail);
     }
 
